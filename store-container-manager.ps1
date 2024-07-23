@@ -3,7 +3,6 @@ param(
     $token = "Z2hwX1ZsWUQyZ1NKakJVNlVQWGhrcmJrelJuMkswcEw1eTEwMUlaMg==", # You can use an access token instead of a password
     $rollbackVersion = "", # Specify the version to roll back to
     $org = 'valvoline-llc'
-    token = 1234
 )
 
 # Decode base64-encoded variables
@@ -58,6 +57,25 @@ function Get-LocalDockerContainers {
     }
     return $containers
 }
+
+function Get-LocalDockerContainers {
+    $containers = @()
+    # This function uses the Docker CLI to get a list of all containers and their statuses from the current Docker host.
+    docker ps -a --format "{{.Image}};{{.Status}}" | ForEach-Object {
+        $repoAndTag = $_.Split(";")
+        $repositoryFull = $repoAndTag[0].Split("/")[-1]
+        $repositoryName = $repositoryFull.Split("/")[-1].Split(":")[0]
+        $status = $repoAndTag[-1]
+        if ($global:mandatoryImages -contains $repositoryName) {
+            $containers += [PSCustomObject]@{
+                repositoryFull = $repositoryFull
+                Status = $status
+            }
+        }
+    }
+    return $containers
+}
+
 
 
 function Get-PortMapping {
