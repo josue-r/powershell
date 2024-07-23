@@ -3,6 +3,7 @@ param(
     $token = "Z2hwX1ZsWUQyZ1NKakJVNlVQWGhrcmJrelJuMkswcEw1eTEwMUlaMg==", # You can use an access token instead of a password
     $rollbackVersion = "", # Specify the version to roll back to
     $org = 'valvoline-llc'
+    token = 1234
 )
 
 # Decode base64-encoded variables
