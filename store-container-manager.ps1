@@ -10,7 +10,7 @@ $decodedDockerUsername = [System.Text.Encoding]::UTF8.GetString([System.Convert]
 $decodedToken = [System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBase64String($token))
 
 # The script will only allow the below repositories to work 
-$global:mandatoryImages = @("vioc-store-api-visit", "vioc-central-api-motor", "vioc-bottom-side-ui")
+$global:mandatoryImages = @("vioc-store-api-visit", "vioc-central-api-motor", "vioc-bottom-side-ui", "vioc-store-api-gateway")
 
 function DockerLogin {
     param($username, $token)
