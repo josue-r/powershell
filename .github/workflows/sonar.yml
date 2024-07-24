@@ -10,8 +10,8 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
     
-    run: ls
-    run: pwd
+    - run: ls
+    - run: pwd
     
     - name: Run PSScriptAnalyzer
       run: |
