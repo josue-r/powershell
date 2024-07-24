@@ -15,7 +15,7 @@ jobs:
         wget -O sonar-scanner-cli.zip https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.6.2.2472-linux.zip
         unzip sonar-scanner-cli.zip -d $HOME
         export PATH="$HOME/sonar-scanner-4.6.2.2472-linux/bin:$PATH"
-        sonar-scanner
+        sonar-scanner -Dsonar.projectKey=your_project_key -Dsonar.sources=. -Dsonar.host.url=http://192.168.0.106:9000 -Dsonar.login=sqp_2cea9653a9b5a957c66b5d3f41ad4f627b8177a1
     
     - run: ls
     - run: pwd
@@ -27,8 +27,8 @@ jobs:
     #     $results | ConvertTo-Json | Out-File analysis-results.json
     #   shell: pwsh
 
-    - run: cat analysis-results.json
+    # - run: cat analysis-results.json
     
-    - name: Run SonarScanner
-      run: |
-        sonar-scanner \ -Dsonar.projectKey=your_project_key \ -Dsonar.sources=. \ -Dsonar.host.url=http://192.168.0.106:9000 \ -Dsonar.login=your_sonarqube_token \ -Dsonar.externalIssuesReportPaths=analysis-results.json
+    # - name: Run SonarScanner
+    #   run: |
+    #     sonar-scanner \ -Dsonar.projectKey=your_project_key \ -Dsonar.sources=. \ -Dsonar.host.url=http://192.168.0.106:9000 \ -Dsonar.login=your_sonarqube_token \ -Dsonar.externalIssuesReportPaths=analysis-results.json
