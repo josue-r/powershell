@@ -8,10 +8,7 @@ jobs:
     
     steps:
     - name: Checkout code
-      uses: actions/checkout@v2
-    
-    - name: Set up PowerShell
-      uses: actions/setup-powershell@v2
+      uses: actions/checkout@v4
     
     - name: Run PSScriptAnalyzer
       run: |
