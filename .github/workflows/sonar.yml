@@ -19,12 +19,9 @@ jobs:
         $results = Invoke-ScriptAnalyzer -Path . -Recurse
         $results | ConvertTo-Json | Out-File analysis-results.json
       shell: pwsh
+
+    - run: cat analysis-results.json
     
     - name: Run SonarScanner
       run: |
-        sonar-scanner \
-          -Dsonar.projectKey=your_project_key \
-          -Dsonar.sources=. \
-          -Dsonar.host.url=http://192.168.0.106:9000 \
-          -Dsonar.login=your_sonarqube_token \
-          -Dsonar.externalIssuesReportPaths=analysis-results.json
+        sonar-scanner \ -Dsonar.projectKey=your_project_key \ -Dsonar.sources=. \ -Dsonar.host.url=http://192.168.0.106:9000 \ -Dsonar.login=your_sonarqube_token \ -Dsonar.externalIssuesReportPaths=analysis-results.json
