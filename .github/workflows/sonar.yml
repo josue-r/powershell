@@ -10,10 +10,13 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
     
+    run: ls
+    run: pwd
+    
     - name: Run PSScriptAnalyzer
       run: |
         Install-Module -Name PSScriptAnalyzer -Force -Scope CurrentUser
-        $results = Invoke-ScriptAnalyzer -Path ./powershell/ -Recurse
+        $results = Invoke-ScriptAnalyzer -Path . -Recurse
         $results | ConvertTo-Json | Out-File analysis-results.json
       shell: pwsh
     
