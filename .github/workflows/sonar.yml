@@ -47,6 +47,7 @@ jobs:
         echo "$HOME/sonar-scanner-4.6.2.2472-linux/bin" >> $GITHUB_PATH
         #export PATH="$HOME/sonar-scanner-4.6.2.2472-linux/bin:$PATH"
     - run: echo $PATH
+    - run: sonar-scanner
         
     # - name: run sonnar-scaner
     #   run: |
