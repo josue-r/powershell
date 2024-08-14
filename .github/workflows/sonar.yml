@@ -47,18 +47,19 @@ jobs:
     - run: ls
     - name: Install sonar cli 5.0 and push external package to Sonar server in azure
       run: |
-        wget -O sonar-scanner-cli.zip https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-5.0.0.2966-linux.zip?_gl=1*r2umpq*_gcl_au*MTE5MTE3MDIxOC4xNzIxMTgwMzA5*_ga*MTQzODIxODQwMi4xNzIxMTgwMzA5*_ga_9JZ0GZ5TC6*MTcyMzY0OTkwNC4xNC4xLjE3MjM2NTAwMDIuNjAuMC4w
+        wget -O sonar-scanner-cli.zip https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-5.0.0.2966-linux.zip?_gl=1*842ldm*_gcl_au*MTE5MTE3MDIxOC4xNzIxMTgwMzA5*_ga*MTQzODIxODQwMi4xNzIxMTgwMzA5*_ga_9JZ0GZ5TC6*MTcyMzY0OTkwNC4xNC4xLjE3MjM2NTAyODcuNjAuMC4w
         unzip sonar-scanner-cli.zip -d $HOME
         echo "$HOME/sonar-scanner-4.6.2.2472-linux/bin" >> $GITHUB_PATH
+        sonar-scanner
         #export PATH="$HOME/sonar-scanner-4.6.2.2472-linux/bin:$PATH"
     - run: echo $PATH
         
-    - name: run sonnar-scaner
-      run: |
-        sonar-scanner \
-          -Dsonar.projectKey=powershell \
-          -Dsonar.sources=. \
-          -Dsonar.host.url=http://20.81.187.233:9000 \
-          -Dsonar.login=sqp_13bc0363190429f734aed26be227d32fa8665a7a \
-          -Dsonar.sarifReportPaths=result.sarif \
-          -Dsonar.exclusions=convert_results.py
+    # - name: run sonnar-scaner
+    #   run: |
+    #     sonar-scanner \
+    #       -Dsonar.projectKey=powershell \
+    #       -Dsonar.sources=. \
+    #       -Dsonar.host.url=http://20.81.187.233:9000 \
+    #       -Dsonar.login=sqp_13bc0363190429f734aed26be227d32fa8665a7a \
+    #       -Dsonar.sarifReportPaths=result.sarif \
+    #       -Dsonar.exclusions=convert_results.py
