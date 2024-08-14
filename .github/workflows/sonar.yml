@@ -21,11 +21,11 @@ jobs:
     
     - run: java --version
 
-    - name: Set JAVA_HOME and Update PATH
-      run: |
-        echo "JAVA_HOME_17_X64=$(java -XshowSettings:properties -version 2>&1 | grep 'java.home' | awk '{print $3}')" >> $GITHUB_ENV
-        echo "JAVA_HOME=$JAVA_HOME_17_X64" >> $GITHUB_ENV
-        echo "$JAVA_HOME/bin" >> $GITHUB_PATH
+    # - name: Set JAVA_HOME and Update PATH
+    #   run: |
+    #     echo "JAVA_HOME_17_X64=$(java -XshowSettings:properties -version 2>&1 | grep 'java.home' | awk '{print $3}')" >> $GITHUB_ENV
+    #     echo "JAVA_HOME=$JAVA_HOME_17_X64" >> $GITHUB_ENV
+    #     echo "$JAVA_HOME/bin" >> $GITHUB_PATH
     
     - name: Run PSScriptAnalyzer
       run: |
@@ -50,13 +50,12 @@ jobs:
         wget -O sonar-scanner-cli.zip https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-5.0.0.2966-linux.zip?_gl=1*842ldm*_gcl_au*MTE5MTE3MDIxOC4xNzIxMTgwMzA5*_ga*MTQzODIxODQwMi4xNzIxMTgwMzA5*_ga_9JZ0GZ5TC6*MTcyMzY0OTkwNC4xNC4xLjE3MjM2NTAyODcuNjAuMC4w
         unzip sonar-scanner-cli.zip -d $HOME
         echo "$HOME/sonar-scanner-4.6.2.2472-linux/bin" >> $GITHUB_PATH
-        sonar-scanner
         #export PATH="$HOME/sonar-scanner-4.6.2.2472-linux/bin:$PATH"
     - run: echo $PATH
         
-    # - name: run sonnar-scaner
-    #   run: |
-    #     sonar-scanner \
+    - name: run sonnar-scaner
+      run: |
+        sonar-scanner \
     #       -Dsonar.projectKey=powershell \
     #       -Dsonar.sources=. \
     #       -Dsonar.host.url=http://20.81.187.233:9000 \
