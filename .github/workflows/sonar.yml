@@ -56,9 +56,9 @@ jobs:
     - name: run sonnar-scaner
       run: |
         sonar-scanner \
-    #       -Dsonar.projectKey=powershell \
-    #       -Dsonar.sources=. \
-    #       -Dsonar.host.url=http://20.81.187.233:9000 \
-    #       -Dsonar.login=sqp_13bc0363190429f734aed26be227d32fa8665a7a \
-    #       -Dsonar.sarifReportPaths=result.sarif \
-    #       -Dsonar.exclusions=convert_results.py
+          -Dsonar.projectKey=powershell \
+          -Dsonar.sources=. \
+          -Dsonar.host.url=http://20.81.187.233:9000 \
+          -Dsonar.login=sqp_13bc0363190429f734aed26be227d32fa8665a7a \
+          -Dsonar.sarifReportPaths=result.sarif \
+          -Dsonar.exclusions=convert_results.py
