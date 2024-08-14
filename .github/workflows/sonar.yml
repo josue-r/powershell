@@ -20,6 +20,12 @@ jobs:
         check-latest: true
     
     - run: java --version
+
+    - name: Set JAVA_HOME and Update PATH
+      run: |
+        echo "JAVA_HOME_17_X64=$(java -XshowSettings:properties -version 2>&1 | grep 'java.home' | awk '{print $3}')" >> $GITHUB_ENV
+        echo "JAVA_HOME=$JAVA_HOME_17_X64" >> $GITHUB_ENV
+        echo "$JAVA_HOME/bin" >> $GITHUB_PATH
     
     - name: Run PSScriptAnalyzer
       run: |
