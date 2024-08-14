@@ -44,7 +44,8 @@ jobs:
       run: |
         wget -O sonar-scanner-cli.zip https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.6.2.2472-linux.zip
         unzip sonar-scanner-cli.zip -d $HOME
-        export PATH="$HOME/sonar-scanner-4.6.2.2472-linux/bin:$PATH"
+        echo "$HOME/sonar-scanner-4.6.2.2472-linux/bin" >> $GITHUB_PATH
+        #export PATH="$HOME/sonar-scanner-4.6.2.2472-linux/bin:$PATH"
     - run: echo $PATH
         
     # - name: run sonnar-scaner
