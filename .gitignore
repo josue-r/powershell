@@ -1,1 +1,4 @@
 .scannerwork/
+.pre-*
+analysis-res*
+*.sarif

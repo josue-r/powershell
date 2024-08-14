@@ -1,16 +1,21 @@
+## Container management script
 param(
     $dockerUsername = "VklPQ0Rldk9wc1VzZXI=",
     $token = "Z2hwX1ZsWUQyZ1NKakJVNlVQWGhrcmJrelJuMkswcEw1eTEwMUlaMg==", # You can use an access token instead of a password
     $rollbackVersion = "", # Specify the version to roll back to
+    $latest = "",
     $org = 'valvoline-llc'
 )
+
+# $UserInput = Read-Host 'Please enter your secure code'
+# $EncryptedInput = ConvertTo-SecureString -String $UserInput -AsPlainText -Force
 
 # Decode base64-encoded variables
 $decodedDockerUsername = [System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBase64String($dockerUsername))
 $decodedToken = [System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBase64String($token))
 
-# The script will only allow the below repositories to work 
-$global:mandatoryImages = @("vioc-store-api-visit", "vioc-central-api-motor", "vioc-bottom-side-ui", "vioc-store-api-gateway")
+# The script will only allow the below repositories to work
+$global:mandatoryImages = @("vioc-store-api-visit", "vioc-central-api-motor", "vioc-bottom-side-ui")
 
 function DockerLogin {
     param($username, $token)
@@ -24,10 +29,10 @@ function DockerLogin {
     }
 }
 # Call DockerLogin function before pulling images
-DockerLogin -username $decodedDockerUsername -token $decodedToken
+DockerLogin -username $decodedDockerUsername -token $token
 
 
-function Get-LocaldockerImages {
+function Get-LocaldockerImage {
     # This function uses the Docker CLI to get a list of all images and their tags from the current Docker host.
     docker images --format "{{.Repository}}:{{.Tag}}" | ForEach-Object {
         $repoAndTag = $_.Split(":") # Split each string into repository and tag based on the colon.
@@ -40,7 +45,7 @@ function Get-LocaldockerImages {
     }
 }
 
-function Get-LocalDockerContainers {
+function Get-LocalDockerContainer {
     $containers = @()
     # This function uses the Docker CLI to get a list of all containers and their statuses from the current Docker host.
     docker ps -a --format "{{.Image}};{{.Status}}" | ForEach-Object {
@@ -58,6 +63,7 @@ function Get-LocalDockerContainers {
     return $containers
 }
 
+
 function Get-PortMapping {
     param($repositoryName)
     switch ($repositoryName) {
@@ -68,7 +74,7 @@ function Get-PortMapping {
     }
 }
 
-function Stop-Container {
+function Stopping-Container {
     param ($existingContainer,$localTag)
     Write-Host "`nStopping and removing existing container: $existingContainer"
     docker stop $existingContainer > $null 2>$1
@@ -112,13 +118,13 @@ function Handle-Container {
     param($repositoryName, $tag, $portMapping, $org)
     $requestedContainerAndTag = "${repositoryName}:$tag"
     #Write-Host "requestedContainerAndTag: $requestedContainerAndTag"
-    $localContainers=  Get-LocalDockerContainers
+    $localContainers=  Get-LocalDockerContainer
     #Write-Host "localContainers: $localContainers"
     foreach ($localContainer in $localContainers) {
         #Write-Host "localContainer: $localContainer"
         $localTag = $localContainer.repositoryFull.Split(":")[1]
-        if ($requestedContainerAndTag -eq $localContainer.repositoryFull -and $localContainer.Status -like "Up*") #This will evaluate if requested image is equal to local image and container status=running" 
-        { 
+        if ($requestedContainerAndTag -eq $localContainer.repositoryFull -and $localContainer.Status -like "Up*") #This will evaluate if requested image is equal to local image and container status=running"
+        {
             Write-Host "`n***`nExisting container: $($localContainer.repositoryFull) is running requested or latest image and tag. No action needed...`n***`n"
             return
         } elseif ($requestedContainerAndTag -eq $localContainer.repositoryFull -and $localContainer.Status -like "Exited*") #This will evaluate if requested image is equal to local imageand container status=stopped "
@@ -132,7 +138,7 @@ function Handle-Container {
         {
             Write-Host "`n***`nExisting container: $($localContainer.repositoryFull) running using different version of requested image and tag: $requestedContainerAndTag. Stopping container...`n***`n"
             $container = $($localContainer.repositoryFull).Split(":")[0]
-            $status = Stop-Container -existingContainer $container -localTag $localTag
+            $status = Stopping-Container -existingContainer $container -localTag $localTag
             Write-Host $status
             Write-Host "`nStarting new container with requested image and tag: $requestedContainerAndTag ..."
             docker run -d --name "$repositoryName" -e HOSTNAME=$env:COMPUTERNAME -p $portMapping "ghcr.io/$org/${repositoryName}:$tag"
@@ -151,7 +157,7 @@ function Handle-Container {
 }
 
 # Function to check if all mandatory images are present locally
-function Check-MissingImages {
+function Check-MissingImage {
     param($localImages, $mandatoryImages)
     $missingImages = @()
     foreach ($image in $mandatoryImages) {
@@ -171,7 +177,7 @@ function Check-MissingImages {
 
 # Function to handle rollback logic
 function Handle-Rollback {
-    param($rollbackVersion, $org, $token)
+    param($rollbackVersion, $org)
     $imageName = $rollbackVersion.Split(":")[0]
     $repositoryName = $imageName.Split("/")[-1]
     $tag = $rollbackVersion.Split(":")[1]
@@ -180,17 +186,16 @@ function Handle-Rollback {
     # Pull the rollback version image from the registry
     Write-Host "Pulling image:"
     docker pull "ghcr.io/$org/${repositoryName}:$tag"
-    #call existing container function 
+    #call existing container function
     Handle-Container -repositoryName $repositoryName -tag $tag -portMapping $portMapping -org $org
 
 }
-# Main logic
-if ($rollbackVersion) {
-    Handle-Rollback -rollbackVersion $rollbackVersion -org $org -token $decodedToken
-} else {
-    $dockerLocalImages = Get-LocaldockerImages
+
+function Get-Latest-Image {
+    param($latest)
+    $dockerLocalImages = Get-LocaldockerImage
     # Check for missing images
-    $missingImages = Check-MissingImages -localImages $dockerLocalImages -mandatoryImages $mandatoryImages
+    $missingImages = Check-MissingImage -localImages $dockerLocalImages -mandatoryImages $mandatoryImages
     foreach ($image in $missingImages) {
         $latestTag = Get-LatestTag -imageName $image -org $org -token $decodedToken
         Write-Host "Pulling missing image: $image with tag $latestTag..."
@@ -205,10 +210,25 @@ if ($rollbackVersion) {
         }
     }
     foreach ($image in $dockerLocalImages) {
-        $localTag = $image.Split(":")[1]
+        #$localTag = $image.Split(":")[1]
         $repositoryName = $image.Split(":")[0]
         $latestTag = Get-LatestTag -imageName $repositoryName -org $org -token $decodedToken
         $portMapping = Get-PortMapping -repositoryName $repositoryName
-        Handle-Container -repositoryName $repositoryName -tag $localTag -portMapping $portMapping -org $org
+        if ($latest) {
+            write-host "i get latest variable"
+            #Handle-Container -repositoryName $repositoryName -tag $latestTag -portMapping $portMapping -org $org
+        } else {
+            write-host "i dont get latest variable"
+            #Handle-Container -repositoryName $repositoryName -tag $localTag -portMapping $portMapping -org $org
+        }
     }
+}
+
+# Main logic
+if ($rollbackVersion) {
+    Handle-Rollback -rollbackVersion $rollbackVersion -org $org
+} elseif ($latest -eq 'latest') {
+    Get-Latest-Image -$latest
+} else {
+    Get-Latest-Image
 }

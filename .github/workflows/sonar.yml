@@ -9,26 +9,32 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
-
-    - name: Install SonarScanner CLI
-      run: |
-        wget -O sonar-scanner-cli.zip https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.6.2.2472-linux.zip
-        unzip sonar-scanner-cli.zip -d $HOME
-        export PATH="$HOME/sonar-scanner-4.6.2.2472-linux/bin:$PATH"
-        sonar-scanner -Dsonar.projectKey=your_project_key -Dsonar.sources=. -Dsonar.host.url=http://186.96.26.225:9000 -Dsonar.login=sqp_2cea9653a9b5a957c66b5d3f41ad4f627b8177a1
-    
     - run: ls
     - run: pwd
     
-    # - name: Run PSScriptAnalyzer
-    #   run: |
-    #     Install-Module -Name PSScriptAnalyzer -Force -Scope CurrentUser
-    #     $results = Invoke-ScriptAnalyzer -Path . -Recurse
-    #     $results | ConvertTo-Json | Out-File analysis-results.json
-    #   shell: pwsh
+    - name: Run PSScriptAnalyzer
+      run: |
+        Install-Module -Name PSScriptAnalyzer -Force -Scope CurrentUser
+        $results = Invoke-ScriptAnalyzer -Path store-container-manager.ps1 -Settings PSScriptAnalyzerSettings.psd1
+        $results | ConvertTo-Csv | Out-File analysis-results-2.csv 
+      shell: pwsh
 
-    # - run: cat analysis-results.json
+    - name: setup python
+        uses: actions/setup-python@v5
+        with:
+          # Semantic version range syntax or exact version of a Python version
+          python-version: '3.x'
+          # Optional - x64 or x86 architecture, defaults to x64
+          architecture: 'x64'
+    - name: run python script
+      run: |
+        python convert_results.py
     
-    # - name: Run SonarScanner
+    -run: ls
+
+    # - name: Install SonarScanner CLI
     #   run: |
-    #     sonar-scanner \ -Dsonar.projectKey=your_project_key \ -Dsonar.sources=. \ -Dsonar.host.url=http://192.168.0.106:9000 \ -Dsonar.login=your_sonarqube_token \ -Dsonar.externalIssuesReportPaths=analysis-results.json
+    #     wget -O sonar-scanner-cli.zip https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.6.2.2472-linux.zip
+    #     unzip sonar-scanner-cli.zip -d $HOME
+    #     export PATH="$HOME/sonar-scanner-4.6.2.2472-linux/bin:$PATH"
+    #     sonar-scanner -Dsonar.projectKey=powershell -Dsonar.sources=. -Dsonar.host.url=http://20.81.187.233:9000 -Dsonar.login=sqp_13bc0363190429f734aed26be227d32fa8665a7a -Dsonar.sarifReportPaths=result.sarif -Dsonar.exclusions=convert_results.py
