@@ -54,7 +54,8 @@ jobs:
           -Dsonar.pullrequest.branch=${GITHUB_HEAD_REF} \
           -Dsonar.pullrequest.base=${GITHUB_BASE_REF} \
           -Dsonar.host.url=${{ secrets.SONAR_HOST_URL }} \
-          -Dsonar.login=${{ secrets.API_TOKEN }}
+          -Dsonar.login=${{ secrets.API_TOKEN }} \
+          -Dsonar.projectKey=test2
 
     # - name: run sonnar-scaner
     #   run: |
