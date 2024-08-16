@@ -70,6 +70,10 @@ jobs:
     # Triggering SonarQube analysis as results of it are required by Quality Gate check.
     - name: SonarQube Scan
       uses: sonarsource/sonarqube-scan-action@master
+      with:
+        args: >
+          -Dsonar.host.url=${{ secrets.SONAR_HOST_URL }}
+          -Dsonar.login=${{ secrets.API_TOKEN }}
       env:
         SONAR_TOKEN: ${{ secrets.API_TOKEN }}
         SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
