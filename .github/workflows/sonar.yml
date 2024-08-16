@@ -33,12 +33,25 @@ jobs:
         unzip sonar-scanner-cli.zip -d $HOME
         echo "$HOME/sonar-scanner-5.0.0.2966-linux/bin" >> $GITHUB_PATH
 
+    - name: Create a project via API
+      run: |
+        curl -X POST "http://20.81.187.233:9000/projects" \
+        -H "Content-Type: application/json" \
+        -H "Authorization: Bearer ${{ secrets.API_TOKEN }}" \
+        -d '{
+              "project": "test2",
+              "name": "test2",
+            }'
+
     - name: run sonnar-scaner
       run: |
         sonar-scanner \
-          -Dsonar.projectKey=powershell \
+          -Dsonar.projectKey=test2 \
           -Dsonar.sources=. \
           -Dsonar.host.url=http://20.81.187.233:9000 \
-          -Dsonar.login=sqp_13bc0363190429f734aed26be227d32fa8665a7a \
+          -Dsonar.login=${{ secrets.API_TOKEN }} \
           -Dsonar.sarifReportPaths=result.sarif \
           -Dsonar.exclusions=convert_results.py
+
+
+          
