@@ -47,42 +47,42 @@ jobs:
               "name": "test2",
             }'
 
-    - name: run sonnar-scaner on Pull Request
-      run: |
-        sonar-scanner \
-          -Dsonar.pullrequest.key=${{ github.event.number }} \
-          -Dsonar.pullrequest.branch=${GITHUB_HEAD_REF} \
-          -Dsonar.pullrequest.base=${GITHUB_BASE_REF} \
-          -Dsonar.host.url=${{ secrets.SONAR_HOST_URL }} \
-          -Dsonar.login=${{ secrets.API_TOKEN }} \
-          -Dsonar.projectKey=test2
-
-    # - name: run sonnar-scaner
+    # - name: run sonnar-scaner on Pull Request
     #   run: |
     #     sonar-scanner \
-    #       -Dsonar.projectKey=test2 \
-    #       -Dsonar.sources=. \
+    #       -Dsonar.pullrequest.key=${{ github.event.number }} \
+    #       -Dsonar.pullrequest.branch=${GITHUB_HEAD_REF} \
+    #       -Dsonar.pullrequest.base=${GITHUB_BASE_REF} \
     #       -Dsonar.host.url=${{ secrets.SONAR_HOST_URL }} \
     #       -Dsonar.login=${{ secrets.API_TOKEN }} \
-    #       -Dsonar.sarifReportPaths=result.sarif \
-    #       -Dsonar.exclusions=convert_results.py
+    #       -Dsonar.projectKey=test2
 
-    # # Triggering SonarQube analysis as results of it are required by Quality Gate check.
-    # - name: SonarQube Scan
-    #   uses: sonarsource/sonarqube-scan-action@master
-    #   env:
-    #     SONAR_TOKEN: ${{ secrets.API_TOKEN }}
-    #     SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+    - name: run sonnar-scaner
+      run: |
+        sonar-scanner \
+          -Dsonar.projectKey=test2 \
+          -Dsonar.sources=. \
+          -Dsonar.host.url=${{ secrets.SONAR_HOST_URL }} \
+          -Dsonar.login=${{ secrets.API_TOKEN }} \
+          -Dsonar.sarifReportPaths=result.sarif \
+          -Dsonar.exclusions=convert_results.py
 
-    # # Check the Quality Gate status.
-    # - name: SonarQube Quality Gate check
-    #   id: sonarqube-quality-gate-check
-    #   uses: sonarsource/sonarqube-quality-gate-action@master
-    #   # Force to fail step after specific time.
-    #   timeout-minutes: 5
-    #   env:
-    #    SONAR_TOKEN: ${{ secrets.API_TOKEN }}
-    #    SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }} #OPTIONAL
+    # Triggering SonarQube analysis as results of it are required by Quality Gate check.
+    - name: SonarQube Scan
+      uses: sonarsource/sonarqube-scan-action@master
+      env:
+        SONAR_TOKEN: ${{ secrets.API_TOKEN }}
+        SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+
+    # Check the Quality Gate status.
+    - name: SonarQube Quality Gate check
+      id: sonarqube-quality-gate-check
+      uses: sonarsource/sonarqube-quality-gate-action@master
+      # Force to fail step after specific time.
+      timeout-minutes: 5
+      env:
+       SONAR_TOKEN: ${{ secrets.API_TOKEN }}
+       SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }} #OPTIONAL
 
 
           
