@@ -72,8 +72,7 @@ jobs:
       uses: sonarsource/sonarqube-scan-action@master
       with:
         args: >
-          -Dsonar.host.url=${{ secrets.SONAR_HOST_URL }}
-          -Dsonar.login=${{ secrets.API_TOKEN }}
+          -Dsonar.projectKey=test2
       env:
         SONAR_TOKEN: ${{ secrets.API_TOKEN }}
         SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
