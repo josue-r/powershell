@@ -13,6 +13,8 @@ function Get-DiskUsage {
     }
 }
 
+$password='jkldsfhdksjhfjkdshf'
+
 # Function to get system uptime
 function Get-SystemUptime {
     $uptime = (Get-CimInstance Win32_OperatingSystem).LastBootUpTime
