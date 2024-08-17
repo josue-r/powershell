@@ -64,15 +64,15 @@ jobs:
     #       -Dsonar.login=${{ secrets.API_TOKEN }} \
     #       -Dsonar.projectKey=test2
 
-    - name: run sonnar-scaner
-      run: |
-        sonar-scanner \
-          -Dsonar.projectKey=test2 \
-          -Dsonar.sources=. \
-          -Dsonar.host.url=${{ secrets.SONAR_HOST_URL }} \
-          -Dsonar.login=${{ secrets.API_TOKEN }} \
-          -Dsonar.sarifReportPaths=result.sarif \
-          -Dsonar.exclusions=convert_results.py
+    # - name: run sonnar-scaner
+    #   run: |
+    #     sonar-scanner \
+    #       -Dsonar.projectKey=test2 \
+    #       -Dsonar.sources=. \
+    #       -Dsonar.host.url=${{ secrets.SONAR_HOST_URL }} \
+    #       -Dsonar.login=${{ secrets.API_TOKEN }} \
+    #       -Dsonar.sarifReportPaths=result.sarif \
+    #       -Dsonar.exclusions=convert_results.py
 
     # Triggering SonarQube analysis as results of it are required by Quality Gate check.,,..
     - name: SonarQube Scan
@@ -83,6 +83,9 @@ jobs:
       with:
         args: >
           -Dsonar.projectKey=test2
+          -Dsonar.sources=.
+          -Dsonar.sarifReportPaths=result.sarif
+          -Dsonar.exclusions=convert_results.py
 
     # # Check the Quality Gate status.
     # - name: SonarQube Quality Gate check
