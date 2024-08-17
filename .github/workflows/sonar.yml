@@ -1,6 +1,6 @@
 name: Analyze PowerShell Script
 
-#on: [push, pull_request] posibly only on push not pfrom pr
+#on: [push, pull_request] posibly only on push not pfrom prsdfsdfdsfds
 on: [pull_request]
 
 jobs:
