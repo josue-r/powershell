@@ -78,9 +78,9 @@ jobs:
       env:
         SONAR_TOKEN: ${{ secrets.API_TOKEN }}
         SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
-      # with:
-      #   args: >
-      #     -Dsonar.projectKey=test2
+      with:
+        args: >
+          -Dsonar.projectKey=test2
 
     # # Check the Quality Gate status.
     # - name: SonarQube Quality Gate check
