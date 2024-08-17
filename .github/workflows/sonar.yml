@@ -72,7 +72,7 @@ jobs:
           -Dsonar.sarifReportPaths=result.sarif \
           -Dsonar.exclusions=convert_results.py
 
-    # Triggering SonarQube analysis as results of it are required by Quality Gate check.,,
+    # Triggering SonarQube analysis as results of it are required by Quality Gate check.,,..
     - name: SonarQube Scan
       uses: sonarsource/sonarqube-scan-action@master
       env:
