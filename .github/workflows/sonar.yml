@@ -1,7 +1,12 @@
 name: Analyze PowerShell Script
 
 #on: [push, pull_request] posibly only on push not pfrom prsdfsdfdsfds
-on: [pull_request]
+on: 
+  push:
+    branches:
+      - main
+  pull_request:
+    types: [opened, synchronize, reopened]
 
 jobs:
   script_analyzer:
