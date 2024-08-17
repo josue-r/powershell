@@ -1,6 +1,12 @@
 name: Analyze PowerShell Script
 
-on: [push, pull_request]
+#on: [push, pull_request] posibly only on push not pfrom prsdfsdfdsfds
+on: 
+  push:
+    branches:
+      - main
+  pull_request:
+    types: [opened, synchronize, reopened]
 
 jobs:
   script_analyzer:
@@ -9,6 +15,9 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
+    
+    - run: env
+    - run: echo ${{ github.event.number }}
 
     - name: Run PSScriptAnalyzer
       run: |
@@ -43,15 +52,45 @@ jobs:
               "name": "test2",
             }'
 
+    # - name: run sonnar-scaner on Pull Request
+    #   run: |
+    #     sonar-scanner \
+    #       -Dsonar.pullrequest.key=${{ github.event.number }} \
+    #       -Dsonar.pullrequest.branch=${GITHUB_HEAD_REF} \
+    #       -Dsonar.pullrequest.base=${GITHUB_BASE_REF} \
+    #       -Dsonar.host.url=${{ secrets.SONAR_HOST_URL }} \
+    #       -Dsonar.login=${{ secrets.API_TOKEN }} \
+    #       -Dsonar.projectKey=test2
+
     - name: run sonnar-scaner
       run: |
         sonar-scanner \
           -Dsonar.projectKey=test2 \
           -Dsonar.sources=. \
-          -Dsonar.host.url=http://20.81.187.233:9000 \
+          -Dsonar.host.url=${{ secrets.SONAR_HOST_URL }} \
           -Dsonar.login=${{ secrets.API_TOKEN }} \
           -Dsonar.sarifReportPaths=result.sarif \
           -Dsonar.exclusions=convert_results.py
+
+    # Triggering SonarQube analysis as results of it are required by Quality Gate check.
+    - name: SonarQube Scan
+      uses: sonarsource/sonarqube-scan-action@master
+      with:
+        args: >
+          -Dsonar.projectKey=test2
+      env:
+        SONAR_TOKEN: ${{ secrets.API_TOKEN }}
+        SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+
+    # Check the Quality Gate status.
+    - name: SonarQube Quality Gate check
+      id: sonarqube-quality-gate-check
+      uses: sonarsource/sonarqube-quality-gate-action@master
+      # Force to fail step after specific time.
+      timeout-minutes: 5
+      env:
+       SONAR_TOKEN: ${{ secrets.API_TOKEN }}
+       SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }} #OPTIONAL
 
 
           
