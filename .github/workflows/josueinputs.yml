@@ -1,5 +1,5 @@
 name: Inputs Sonar
-run-name: ${{ inputs.ENVIRONMENT }} - Release ${{ inputs.RELEASE }}
+run-name: "${{ inputs.ENVIRONMENT }} - Release: ${{ inputs.RELEASE }}"
 
 on:
   workflow_dispatch:
