@@ -48,7 +48,7 @@ jobs:
 
     - name: Create a project via API
       run: |
-        curl -X POST "${{ secrets.SONAR_HOST_URL }}/projects" \
+        curl -X POST "http://20.81.187.233:9000/projects" \
         -H "Content-Type: application/json" \
         -H "Authorization: Bearer ${{ secrets.API_TOKEN }}" \
         -d '{
