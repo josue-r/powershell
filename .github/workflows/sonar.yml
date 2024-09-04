@@ -46,15 +46,15 @@ jobs:
         unzip sonar-scanner-cli.zip -d $HOME
         echo "$HOME/sonar-scanner-5.0.0.2966-linux/bin" >> $GITHUB_PATH
 
-    # - name: Create a project via API
-    #   run: |
-    #     curl -X POST "http://20.81.187.233:9000/projects" \
-    #     -H "Content-Type: application/json" \
-    #     -H "Authorization: Bearer ${{ secrets.API_TOKEN }}" \
-    #     -d '{
-    #           "project": "test2",
-    #           "name": "test2",
-    #         }'
+    - name: Create a project via API
+      run: |
+        curl -X POST "http://20.81.187.233:9000/projects" \
+        -H "Content-Type: application/json" \
+        -H "Authorization: Bearer ${{ secrets.API_TOKEN }}" \
+        -d '{
+              "project": ${{ github.event.repository.name }},
+              "name": ${{ github.event.repository.name }},
+            }'
 
     # - name: run sonnar-scaner on Pull Request
     #   run: |
