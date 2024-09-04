@@ -95,7 +95,7 @@ jobs:
     #   timeout-minutes: 5
     #   env:
     #    SONAR_TOKEN: ${{ secrets.API_TOKEN }}
-    #    SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }} #OPTIONAL 1
+    #    SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }} #OPTIONAL 1..
 
 
           
