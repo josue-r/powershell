@@ -20,6 +20,7 @@ jobs:
     
     - run: env
     - run: echo ${{ github.event.number }}
+    - run: echo $GITHUB_REPOSITORY
 
     - name: Run PSScriptAnalyzer
       run: |
