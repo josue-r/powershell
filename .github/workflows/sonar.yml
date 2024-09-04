@@ -21,7 +21,7 @@ jobs:
     - run: env
     - run: echo ${{ github.event.number }}
     - run: echo $GITHUB_REPOSITORY
-    - run: echo ${{ github.event.repo }}
+    - run: echo ${{ github.event.repository }}
     - run: echo ${{ github.event.repo.name }}
 
     # - name: Run PSScriptAnalyzer
