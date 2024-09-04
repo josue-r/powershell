@@ -1,4 +1,4 @@
-name: Inputs Analyze PowerShell Script
+name: Inputs Sonar
 run-name: ${{ inputs.ENVIRONMENT }} - Release ${{ inputs.RELEASE }}
 
 on:
@@ -11,7 +11,6 @@ on:
         type: string
       ENVIRONMENT:
         description: 'Environment to deploy'
-        type: environment
         required: true
         type: choice
         options:
