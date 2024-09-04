@@ -1,4 +1,4 @@
-name: Analyze PowerShell Script
+name: Inputs Analyze PowerShell Script
 run-name: ${{ inputs.ENVIRONMENT }} - Release ${{ inputs.RELEASE }}
 
 
