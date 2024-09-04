@@ -48,7 +48,7 @@ jobs:
 
     - name: Create a project via API
       run: |
-        curl -X POST "http://20.81.187.233:9000/projects" \
+        curl -X POST "${{ secrets.SONAR_HOST_URL }}/projects" \
         -H "Content-Type: application/json" \
         -H "Authorization: Bearer ${{ secrets.API_TOKEN }}" \
         -d '{
@@ -76,18 +76,19 @@ jobs:
     #       -Dsonar.sarifReportPaths=result.sarif \
     #       -Dsonar.exclusions=convert_results.py
 
-    # Triggering SonarQube analysis as results of it are required by Quality Gate check.,,..
-    - name: SonarQube Scan
-      uses: sonarsource/sonarqube-scan-action@master
-      env:
-        SONAR_TOKEN: ${{ secrets.API_TOKEN }}
-        SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
-      with:
-        args: >
-          -Dsonar.projectKey=${{ github.event.repository.name }}
-          -Dsonar.sources=.
-          -Dsonar.sarifReportPaths=result.sarif
-          -Dsonar.exclusions=convert_results.py
+#this actually works well
+    # # Triggering SonarQube analysis as results of it are required by Quality Gate check.,,..
+    # - name: SonarQube Scan
+    #   uses: sonarsource/sonarqube-scan-action@master
+    #   env:
+    #     SONAR_TOKEN: ${{ secrets.API_TOKEN }}
+    #     SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+    #   with:
+    #     args: >
+    #       -Dsonar.projectKey=${{ github.event.repository.name }}
+    #       -Dsonar.sources=.
+    #       -Dsonar.sarifReportPaths=result.sarif
+    #       -Dsonar.exclusions=convert_results.py
 
     # # Check the Quality Gate status.
     # - name: SonarQube Quality Gate check
