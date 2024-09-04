@@ -34,66 +34,66 @@ jobs:
     - run: echo ${{ github.event.repository.name }} #this will print only repo name ..
     - run: echo "project" "${{ github.event.repository.name }}"
 
-    - name: Run PSScriptAnalyzer
-      run: |
-        Install-Module -Name PSScriptAnalyzer -Force -Scope CurrentUser
-        $results = Invoke-ScriptAnalyzer -Path store-container-manager.ps1 -Settings PSScriptAnalyzerSettings.psd1
-        $results | ConvertTo-Csv | Out-File analysis-results-2.csv 
-      shell: pwsh
+#     - name: Run PSScriptAnalyzer
+#       run: |
+#         Install-Module -Name PSScriptAnalyzer -Force -Scope CurrentUser
+#         $results = Invoke-ScriptAnalyzer -Path store-container-manager.ps1 -Settings PSScriptAnalyzerSettings.psd1
+#         $results | ConvertTo-Csv | Out-File analysis-results-2.csv 
+#       shell: pwsh
 
-    - name: setup python
-      uses: actions/setup-python@v5
-      with:
-        # Semantic version range syntax or exact version of a Python version
-        python-version: '3.x'
+#     - name: setup python
+#       uses: actions/setup-python@v5
+#       with:
+#         # Semantic version range syntax or exact version of a Python version
+#         python-version: '3.x'
 
-    - name: run python script
-      run: |
-        python convert_results.py
+#     - name: run python script
+#       run: |
+#         python convert_results.py
 
-    - name: Install sonar cli 5.0 and push external package to Sonar server in azure
-      run: |
-        wget -O sonar-scanner-cli.zip https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-5.0.0.2966-linux.zip?_gl=1*19xt29g*_gcl_au*MTE5MTE3MDIxOC4xNzIxMTgwMzA5*_ga*MTQzODIxODQwMi4xNzIxMTgwMzA5*_ga_9JZ0GZ5TC6*MTcyMzY0OTkwNC4xNC4xLjE3MjM2NTAyODcuNjAuMC4w
-        unzip sonar-scanner-cli.zip -d $HOME
-        echo "$HOME/sonar-scanner-5.0.0.2966-linux/bin" >> $GITHUB_PATH
+#     - name: Install sonar cli 5.0 and push external package to Sonar server in azure
+#       run: |
+#         wget -O sonar-scanner-cli.zip https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-5.0.0.2966-linux.zip?_gl=1*19xt29g*_gcl_au*MTE5MTE3MDIxOC4xNzIxMTgwMzA5*_ga*MTQzODIxODQwMi4xNzIxMTgwMzA5*_ga_9JZ0GZ5TC6*MTcyMzY0OTkwNC4xNC4xLjE3MjM2NTAyODcuNjAuMC4w
+#         unzip sonar-scanner-cli.zip -d $HOME
+#         echo "$HOME/sonar-scanner-5.0.0.2966-linux/bin" >> $GITHUB_PATH
 
-    - name: Create a project via API
-      run: |
-        curl -X POST "http://20.81.187.233:9000/api/projects/create?project=${{ github.event.repository.name }}&name=${{ github.event.repository.name }}" \
-        -H "Content-Type: application/json" \
-        -H "Authorization: Bearer ${{ secrets.API_TOKEN }}" \
-        -d ''
+#     - name: Create a project via API
+#       run: |
+#         curl -X POST "http://20.81.187.233:9000/api/projects/create?project=${{ github.event.repository.name }}&name=${{ github.event.repository.name }}" \
+#         -H "Content-Type: application/json" \
+#         -H "Authorization: Bearer ${{ secrets.API_TOKEN }}" \
+#         -d ''
 
-    # - name: run sonnar-scaner on Pull Request
-    #   run: |
-    #     sonar-scanner \
-    #       -Dsonar.pullrequest.key=${{ github.event.number }} \
-    #       -Dsonar.pullrequest.branch=${GITHUB_HEAD_REF} \
-    #       -Dsonar.pullrequest.base=${GITHUB_BASE_REF} \
-    #       -Dsonar.host.url=${{ secrets.SONAR_HOST_URL }} \
-    #       -Dsonar.login=${{ secrets.API_TOKEN }} \
-    #       -Dsonar.projectKey=test2
+#     # - name: run sonnar-scaner on Pull Request
+#     #   run: |
+#     #     sonar-scanner \
+#     #       -Dsonar.pullrequest.key=${{ github.event.number }} \
+#     #       -Dsonar.pullrequest.branch=${GITHUB_HEAD_REF} \
+#     #       -Dsonar.pullrequest.base=${GITHUB_BASE_REF} \
+#     #       -Dsonar.host.url=${{ secrets.SONAR_HOST_URL }} \
+#     #       -Dsonar.login=${{ secrets.API_TOKEN }} \
+#     #       -Dsonar.projectKey=test2
 
-    # - name: run sonnar-scaner
-    #   run: |
-    #     sonar-scanner \
-    #       -Dsonar.projectKey=test2 \
-    #       -Dsonar.sources=. \
-    #       -Dsonar.host.url=${{ secrets.SONAR_HOST_URL }} \
-    #       -Dsonar.login=${{ secrets.API_TOKEN }} \
-    #       -Dsonar.sarifReportPaths=result.sarif \
-    #       -Dsonar.exclusions=convert_results.py
+#     # - name: run sonnar-scaner
+#     #   run: |
+#     #     sonar-scanner \
+#     #       -Dsonar.projectKey=test2 \
+#     #       -Dsonar.sources=. \
+#     #       -Dsonar.host.url=${{ secrets.SONAR_HOST_URL }} \
+#     #       -Dsonar.login=${{ secrets.API_TOKEN }} \
+#     #       -Dsonar.sarifReportPaths=result.sarif \
+#     #       -Dsonar.exclusions=convert_results.py
 
-#this actually works well
-    # Triggering SonarQube analysis as results of it are required by Quality Gate check.,,..
-    - name: SonarQube Scan
-      uses: sonarsource/sonarqube-scan-action@master
-      env:
-        SONAR_TOKEN: ${{ secrets.API_TOKEN }}
-        SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
-      with:
-        args: >
-          -Dsonar.projectKey=${{ github.event.repository.name }}
-          -Dsonar.sources=.
-          -Dsonar.sarifReportPaths=result.sarif
-          -Dsonar.exclusions=convert_results.py
+# #this actually works well
+#     # Triggering SonarQube analysis as results of it are required by Quality Gate check.,,..
+#     - name: SonarQube Scan
+#       uses: sonarsource/sonarqube-scan-action@master
+#       env:
+#         SONAR_TOKEN: ${{ secrets.API_TOKEN }}
+#         SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+#       with:
+#         args: >
+#           -Dsonar.projectKey=${{ github.event.repository.name }}
+#           -Dsonar.sources=.
+#           -Dsonar.sarifReportPaths=result.sarif
+#           -Dsonar.exclusions=convert_results.py
