@@ -53,8 +53,8 @@ jobs:
         -H "Content-Type: application/json" \
         -H "Authorization: Bearer ${{ secrets.API_TOKEN }}" \
         -d '{
-              "project": "${{ github.event.repository.name }}",
-              "name": "${{ github.event.repository.name }}",
+              "project": ${{ github.event.repository.name }},
+              "name": ${{ github.event.repository.name }},
             }'
 
     # - name: run sonnar-scaner on Pull Request
