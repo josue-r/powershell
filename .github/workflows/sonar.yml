@@ -1,5 +1,5 @@
 name: Analyze PowerShell Script
-run-name: "${{secrets.ENVIRONMENT}} - Release: ${{secrets.RELEASE}}"
+run-name: ${{secrets.ENVIRONMENT}} - Release ${{secrets.RELEASE}}
 
 #on: [push, pull_request] posibly only on push not pfrom prsdfsdfdsfds
 on: 
