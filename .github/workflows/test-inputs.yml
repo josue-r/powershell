@@ -1,7 +1,6 @@
 name: Inputs Analyze PowerShell Script
 run-name: ${{ inputs.ENVIRONMENT }} - Release ${{ inputs.RELEASE }}
 
-
 on:
   workflow_dispatch:
     inputs:
@@ -14,13 +13,11 @@ on:
         description: 'Environment to deploy'
         type: environment
         required: true
-#on: [push, pull_request] posibly only on push not pfrom prsdfsdfdsfds
-# on: 
-#   push:
-#     branches:
-#       - main
-#   pull_request:
-#       types: [opened, synchronize, reopened]
+        type: choice
+        options:
+        - shoes-akamai-qa
+        - shoes-akamai-prod
+        - shoes-akamai-debug
 
 jobs:
   script_analyzer:
