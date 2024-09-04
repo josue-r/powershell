@@ -49,13 +49,10 @@ jobs:
 
     - name: Create a project via API
       run: |
-        curl -X POST "http://20.81.187.233:9000/api/projects/create" \
+        curl -X POST "http://20.81.187.233:9000/api/projects/create?project=powershell&name=powershell" \
         -H "Content-Type: application/json" \
         -H "Authorization: Bearer ${{ secrets.API_TOKEN }}" \
-        -d '{
-              "project": "${{ github.event.repository.name }}",
-              "name": "${{ github.event.repository.name }}"
-            }'
+        -d ''
 
     # - name: run sonnar-scaner on Pull Request
     #   run: |
