@@ -1,4 +1,5 @@
-name: Analyze PowerShell Script
+#name: Analyze PowerShell Script
+name: "${{secrets.ENVIRONMENT}} - Release: ${{secrets.RELEASE}}"
 
 #on: [push, pull_request] posibly only on push not pfrom prsdfsdfdsfds
 on: 
@@ -87,16 +88,3 @@ jobs:
           -Dsonar.sources=.
           -Dsonar.sarifReportPaths=result.sarif
           -Dsonar.exclusions=convert_results.py
-
-    # # Check the Quality Gate status.
-    # - name: SonarQube Quality Gate check
-    #   id: sonarqube-quality-gate-check
-    #   uses: sonarsource/sonarqube-quality-gate-action@master
-    #   # Force to fail step after specific time.
-    #   timeout-minutes: 5
-    #   env:
-    #    SONAR_TOKEN: ${{ secrets.API_TOKEN }}
-    #    SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }} #OPTIONAL 1..
-
-
-          
