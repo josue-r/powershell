@@ -1,13 +1,26 @@
 name: Analyze PowerShell Script
-run-name: ${{ secrets.ENVIRONMENT }} - Release ${{ secrets.RELEASE }}
+run-name: ${{ inputs.ENVIRONMENT }} - Release ${{ inputs.RELEASE }}
 
+
+on:
+  workflow_dispatch:
+    inputs:
+      RELEASE:
+        description: 'Release version to deploy'
+        required: true
+        default: '<app>-ui-<release_version>'
+        type: string
+      ENVIRONMENT:
+        description: 'Environment to deploy'
+        type: environment
+        required: true
 #on: [push, pull_request] posibly only on push not pfrom prsdfsdfdsfds
-on: 
-  push:
-    branches:
-      - main
-  pull_request:
-      types: [opened, synchronize, reopened]
+# on: 
+#   push:
+#     branches:
+#       - main
+#   pull_request:
+#       types: [opened, synchronize, reopened]
 
 jobs:
   script_analyzer:
